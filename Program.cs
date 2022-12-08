@@ -5,13 +5,13 @@
         public class GameRecord
         {
             public int index;
-            public int Us12;
+            public int WinLose;
             public string opponent;
             public int rate;
-            public GameRecord(int index, int Us12, string opponent, int rate)
+            public GameRecord(int index, int wl, string opponent, int rate)
             {
                 this.index = index;
-                this.Us12 = Us12;
+                this.WinLose = wl;
                 this.opponent = opponent;
                 this.rate = rate;
             }
@@ -22,6 +22,10 @@
         private string UserName = " ";
         private int CurrentRating = 1;
         private int GamesCount = 0;
+        private List<int> index = new List<int>();
+        private List<int> WinLose = new List<int>();
+        private List<string> opponent = new List<string>();
+        private List<int> rate = new List<int>();
         private List<GameRecord> record = new List<GameRecord>();
 
         public string GetName()
@@ -51,7 +55,11 @@
         {
             if (Rating > 0)
             {
-                CurrentRating = CurrentRating + Rating;
+                CurrentRating = CurrentRating - Rating;
+                this.index.Add(index);
+                WinLose.Add(1);
+                opponent.Add(opponentName);
+                rate.Add(Rating);
                 GameRecord game = new GameRecord(index, 1, opponentName, Rating);
                 record.Add(game);
             }
@@ -64,8 +72,12 @@
         {
             if(Rating > 0 & CurrentRating - Rating > 0)
             {
-                CurrentRating = CurrentRating - Rating;
-                GameRecord game = new GameRecord(index, 1, opponentName, Rating);
+                CurrentRating = CurrentRating + Rating;
+                this.index.Add(index);
+                WinLose.Add(0);
+                opponent.Add(opponentName);
+                rate.Add(Rating);
+                GameRecord game = new GameRecord(index, 0, opponentName, Rating);
                 record.Add(game);
             }
             else
@@ -78,12 +90,14 @@
         {
             for (int i = 0; i < record.Count; i++)
             {
-                if (record[i].Us12 == 0)
+                if (record[i].WinLose == 0)
                 {
-                    Console.WriteLine("Game {0} lose {1} - {2} points", record[i].index, record[i].opponent, record[i].rate);
+                    Console.WriteLine("Game {0} lose {1} -{2} points", index[i], opponent[i], rate[i]);
+                    Console.WriteLine("Game {0} lose {1} -{2} points", record[i].index, record[i].opponent, record[i].rate);
                 }
                 else
                 {
+                    Console.WriteLine("Game {0} win {1} +{2} points", index[i], opponent[i], rate[i]);
                     Console.WriteLine("Game {0} win {1} +{2} points", record[i].index, record[i].opponent, record[i].rate);
                 }
             }
@@ -157,9 +171,9 @@
             Console.WriteLine("User2: {0}", User2.GetCurrentRating());
             
             Console.WriteLine("User2");
-            User2.GetStats();
-            Console.WriteLine("User1");
             User1.GetStats();
+            Console.WriteLine("User1");
+            User2.GetStats();
         }
     }
 }
